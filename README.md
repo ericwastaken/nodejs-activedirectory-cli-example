@@ -18,11 +18,14 @@ This example demonstrates how to authenticate users using Active Directory.
 node ad-auth.js --username [username-here]
 ```
 
-Replace `[username-here]` with the user account you want to authenticate INCLUDING the @domain.com part.
+Replace `[username-here]` with the user account you want to authenticate INCLUDING the @domain.com part. If you use the short domain format (i.e. DOMAINNAME\username), the script will reformat the username into the full domain format.
+
 For example:
-* someuser@yourdomain.com
-* someuser@yourdomain.local
-* YOURDOMAINNAME\someuser
+* someuser@yourdomain.com - will be used as passed
+* someuser@yourdomain.local - will be used as passed
+* YOURDOMAINNAME\someuser - will be reformatted to someuser@yourdomainname.com (or whatever domain string is in the .env file)
+
+> **Note:** When using the short domain format, depending on your command line, you might need to quote the username. For example: `node ad-auth.js --username "YOURDOMAINNAME\someuser"`.
 
 The script will prompt you to enter the password for the user account.
 
@@ -54,7 +57,9 @@ This example demonstrates how to authenticate users using Active Directory. It s
 
 ## Known Issues
 
-- When passing a netbios style name "DOMAINNAME\username" as the username, groups don't pull up correctly for the user. This is likely a bug with this code that needs further research.
+- None
+
+
 
 
 

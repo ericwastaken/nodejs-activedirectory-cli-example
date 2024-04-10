@@ -67,7 +67,18 @@ const promptForPassword = async (username) => {
  * @returns {Promise<number>}
  */
 const authenticateUser = async () => {
-  const username = options.username;
+  let username = options.username;
+
+  // Check if the username is in the format 'mydomain\user' since the activedirectory2 library requires the full domain
+  if (username.includes('\\')) {
+    // Split the domain and user, and append the domain to the username
+    const [domainshort, user] = username.split('\\');
+    // Lookup the full domain from the environment variable
+    const domainlong = process.env.LDAP_DOMAIN_STRING;
+    // Append the full domain to the username
+    username = `${user}@${domainlong}`;
+  }
+
   try {
     const password = await promptForPassword(username); // Ensure promptForPassword is correctly implemented to handle input securely
     const auth = await authenticateAsync(username, password);
@@ -92,7 +103,7 @@ const authenticateUser = async () => {
     }
   } catch (err) {
     console.error('ERROR during authentication:', JSON.stringify(err));
-    return 100
+    return 100;
   }
 };
 
